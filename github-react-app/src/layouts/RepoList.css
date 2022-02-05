@@ -1,16 +1,18 @@
 :root{
-    --color-Hint: #7E7E7E;
-    --color-default: #000000;
-    --color-border: #D9D9D9;
-    --accent: #FF5555;
-    --background: #FFFFFF;
-    --star-accent: #FF9432;
-    --link-hover: #208FBF;
+    --grey-color: #7E7E7E;
+    --default-text-color: #000000;
+    --border-color: #D9D9D9;
+    --btn-color: #FF5555;
+    --bg-color: #FFFFFF;
+    --star-color: #FF9432;
+    --link-hover-color: #208FBF;
+    --border-radius: 6px;
+    --default-border: 1px solid var(--border-color);
 }
 
 html{
-    color: var(--color-default);
-    background-color: var(--background);
+    color: var(--default-text-color);
+    background-color: var(--bg-color);
     font-family: "Roboto";
 }
 h5{
@@ -21,7 +23,7 @@ h5{
 }
 p, span{
     margin: 0;
-    color: var(--color-Hint);
+    color: var(--grey-color);
     font-size: 14px;
     line-height: 16.41px;
 }
@@ -35,9 +37,9 @@ p, span{
 .git-repo-tile {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-border);
+    border: var(--default-border);
     box-sizing: border-box;
-    border-radius: 6px;
+    border-radius: var(--border-radius);
     margin-top: 20px;
     padding: 12px;
     height: 104px;
@@ -58,7 +60,7 @@ p, span{
     margin-bottom: 4px;
 }
 .git-repo-tile__org-link:hover {
-    color: var(--link-hover);
+    color: var(--link-hover-color);
 }
 .git-repo-tile__context{
     display: flex;
@@ -85,8 +87,8 @@ p, span{
     justify-content: space-between;
 }
 .search-bar__search-button{
-    background-color: var(--accent);
-    border-radius: 6px;
+    background-color: var(--btn-color);
+    border-radius: var(--border-radius);
     border: none;
     width: 50px;
     height: 50px;
@@ -95,7 +97,7 @@ p, span{
     opacity: 70%;
 }
 .search-bar__search-button:disabled{
-    background-color: var(--color-Hint);
+    background-color: var(--grey-color);
 }
 .search-bar__search-icon{
     margin: 0 auto;
@@ -103,15 +105,15 @@ p, span{
 .search-bar__input {
     width: 295px;
     padding: 17px 0 17px 12px;
-    border: 1px solid var(--color-border);
+    border: var(--default-border);
     box-sizing: border-box;
-    border-radius: 6px;
+    border-radius: var(--border-radius);
 }
 .search-bar__input:focus {
     outline: none;
-    border: 1px solid var(--accent);
+    border-color: var(--btn-color);
 }
 .search-bar__input:disabled{
     outline: none;
-    border: 1px solid var(--color-border);
+    border: var(--default-border);
 }

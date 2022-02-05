@@ -5,12 +5,20 @@
  * Или не меняйте, если делаете запрос за списком репоизториев для организации)
  * Выберите любой запрос из публичного API GitHub.
  */
+
 export interface IGitHubStore {
     getOrganizationReposList(params: GetOrganizationReposListParams): Promise<ApiResp<RepoItem[]>>;
 }
 
 export type GetOrganizationReposListParams = {
     organizationName: string;
+}
+
+export type PostOrganizationRepoParams = {
+    organizationName: string;
+    repoName: string;
+    oauthToken: string;
+    private: boolean;
 }
 
 export type RepoItem = {
@@ -23,6 +31,6 @@ export type RepoItem = {
 }
 
 export type ApiResp<T> = 
-    {
-        repos: T[]
-    }
+{
+    repos: T[];
+}
