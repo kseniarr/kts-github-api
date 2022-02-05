@@ -20,7 +20,7 @@ export type RequestParams<ReqT> = {
 }
 
 // Перечисление статусов ответа
-enum StatusHTTP {
+export enum StatusHTTP {
     // TODO: заполнить
     OK = 200, 
     MOVED_PERMANENTLY = 301,

@@ -14,8 +14,8 @@ gitHubStore.getOrganizationReposList({
 
 gitHubStore.postOrganizationRepo({
     organizationName: "test-organizationnn",
-    repoName: "testrepositor",
-    oauthToken: "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",
+    repoName: "testrpoitr",
+    oauthToken: "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",
     private: true
   }).then(result => {
     console.log(result); 

@@ -12,19 +12,19 @@ export default class GitHubStore implements IGitHubStore {
     async getOrganizationReposList(params: GetOrganizationReposListParams): Promise<ApiResp<RepoItem[]>> {
         // TODO: Здесь сделайте вызов из this.apiStore и верните результат
         // Документация github: https://docs.github.com/en/rest/reference/repos#list-organization-repositories
-
-        return await this.apiStore.request({
+        const response = await this.apiStore.request<RepoItem[]>({
             method: HTTPMethod.GET, 
             headers: {"Accept": "application/vnd.github.v3+json"},
             endpoint: `/orgs/${params.organizationName}/repos`,
             data: {
                 "org": params.organizationName
             }
-        }).then();
+        });
+        return response;
     }
 
     async postOrganizationRepo(params: PostOrganizationRepoParams): Promise<ApiResp<RepoItem[]>> {
-        return await this.apiStore.request({
+        const response = await this.apiStore.request<RepoItem[]>({
             method: HTTPMethod.POST, 
             headers: {
                 "Accept": "application/vnd.github.v3+json", 
@@ -36,6 +36,7 @@ export default class GitHubStore implements IGitHubStore {
                 "name": params.repoName,
                 "private": params.private
             }
-        }).then();
+        });
+        return response;
     }
 }

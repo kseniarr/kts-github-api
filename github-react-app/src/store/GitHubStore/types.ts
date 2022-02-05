@@ -6,6 +6,8 @@
  * Выберите любой запрос из публичного API GitHub.
  */
 
+import { StatusHTTP } from "../../shared/store/ApiStore/types"
+
 export interface IGitHubStore {
     getOrganizationReposList(params: GetOrganizationReposListParams): Promise<ApiResp<RepoItem[]>>;
 }
@@ -32,5 +34,7 @@ export type RepoItem = {
 
 export type ApiResp<T> = 
 {
-    repos: T[];
+    success: boolean,
+    data: T;
+    status: StatusHTTP
 }

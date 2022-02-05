@@ -17,7 +17,7 @@ export default class ApiStore implements IApiStore {
         switch(params.method){
             case HTTPMethod.GET: {
                 let org = qs.parse(data);
-                let url = qs.stringify(`${this.baseUrl}/orgs/${org}/repos`);
+                let url = `${this.baseUrl}/orgs/${org['org']}/repos`;
 
                 return fetch(url, params).then((response) => {
                     if(response.ok) return response.json();
