@@ -1,8 +1,8 @@
 // Перечисление методов HTTP-запроса
 export enum HTTPMethod {
     // TODO: заполнить
-    GET = 'GET',
-    POST = 'POST'
+    GET = "GET",
+    POST = "POST",
 }
 
 // Параметры запроса
@@ -17,32 +17,37 @@ export type RequestParams<ReqT> = {
      * - Для POST-запроса данные преобразуются к формату JSON и добавляются в тело запроса (необязательное требование)
      */
     data: ReqT;
-}
+};
 
 // Перечисление статусов ответа
 export enum StatusHTTP {
     // TODO: заполнить
-    OK = 200, 
+    OK = 200,
     MOVED_PERMANENTLY = 301,
     BAD_REQUEST = 400,
     FORBIDDEN = 403,
     NOT_FOUND = 404,
     UNPROCESSABLE_ENTITY = 422,
-    SERVER_ERROR = 500
+    SERVER_ERROR = 500,
 }
 
 // Ответ API
 export type ApiResponse<SuccessT, ErrorT> =
     | {
-    success: true;
-    data: SuccessT;
-    status: StatusHTTP;
-}
+          success: true;
+          data: SuccessT;
+          status: StatusHTTP;
+      }
     | {
-    success: false;
-    data: ErrorT;
-    status: StatusHTTP;
-};
+          success: false;
+          data: ErrorT;
+          status: StatusHTTP;
+      }
+    | {
+          success: false;
+          data: any;
+          status: StatusHTTP;
+      };
 
 // Интерфейс для класса, с помощью которого можно делать запросы к API
 export interface IApiStore {
@@ -50,5 +55,7 @@ export interface IApiStore {
     readonly baseUrl: string;
 
     // Метод, с помощью которого делается запрос. TODO: реализовать в классе ApiStore
-    request<SuccessT, ErrorT = any, ReqT = {}>(params: RequestParams<ReqT>): Promise<ApiResponse<SuccessT, ErrorT>>
+    request<SuccessT, ErrorT = any, ReqT = {}>(
+        params: RequestParams<ReqT>
+    ): Promise<ApiResponse<SuccessT, ErrorT>>;
 }

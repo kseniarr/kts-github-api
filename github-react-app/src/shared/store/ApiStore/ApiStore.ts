@@ -1,7 +1,12 @@
-import { visitParameterList } from "typescript";
-import {ApiResponse, HTTPMethod, IApiStore, RequestParams} from "./types";
-import QueryString from "qs";
 import qs from "qs";
+
+import {
+    IApiStore,
+    RequestParams,
+    ApiResponse,
+    HTTPMethod,
+    StatusHTTP,
+} from "./types";
 
 export default class ApiStore implements IApiStore {
     constructor(baseUrl: string) {
@@ -9,28 +14,67 @@ export default class ApiStore implements IApiStore {
         // и присвойте его в this.baseUrl
         this.baseUrl = baseUrl;
     }
-    readonly baseUrl: string; 
+    readonly baseUrl: string;
 
-    request<SuccessT, ErrorT = any, ReqT = {}>(params: RequestParams<ReqT>): Promise<ApiResponse<SuccessT, ErrorT>> {
+    async request<SuccessT, ErrorT = any, ReqT = {}>(
+        params: RequestParams<ReqT>
+    ): Promise<ApiResponse<SuccessT, ErrorT>> {
         // TODO: Напишите здесь код, который с помощью fetch будет делать запрос
         let data = qs.stringify(params.data);
-        switch(params.method){
-            case HTTPMethod.GET: {
-                let org = qs.parse(data);
-                let url = `${this.baseUrl}/orgs/${org['org']}/repos`;
+        try {
+            switch (params.method) {
+                case HTTPMethod.GET: {
+                    let keys = qs.parse(data);
+                    let url = `${this.baseUrl}/orgs/${keys["org"]}/repos`;
+                    if (Object.keys(keys).length > 1) {
+                        url = `${this.baseUrl}/repos/${keys["orgName"]}/${keys["repoName"]}/branches`;
+                    }
+                    const response = await fetch(url, params);
+                    if (response.ok) {
+                        return {
+                            success: true,
+                            data: await response.json(),
+                            status: StatusHTTP.OK,
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            data: await response.json(),
+                            status: response.status,
+                        };
+                    }
+                }
+                case HTTPMethod.POST: {
+                    let bodyData = JSON.stringify(qs.parse(data));
 
-                return fetch(url, params).then((response) => {
-                    if(response.ok) return response.json();
-                    else throw response;
-                }).catch((err) => console.log(err)); 
+                    const response = await fetch(
+                        this.baseUrl + params.endpoint,
+                        {
+                            ...params,
+                            body: bodyData,
+                        }
+                    );
+                    if (response.ok) {
+                        return {
+                            success: true,
+                            data: await response.json(),
+                            status: StatusHTTP.OK,
+                        };
+                    } else {
+                        return {
+                            success: false,
+                            data: await response.json(),
+                            status: response.status,
+                        };
+                    }
+                }
             }
-            case HTTPMethod.POST: {
-                let bodyData = JSON.stringify(qs.parse(data));
-                return fetch(this.baseUrl + params.endpoint, {...params, body: bodyData}).then((response) => {
-                    if(response.ok) return response.json();
-                    else throw response;
-                }).catch((err) => console.log(err));
-            }
+        } catch (error) {
+            return {
+                success: false,
+                data: error,
+                status: StatusHTTP.SERVER_ERROR,
+            };
         }
     }
 }
