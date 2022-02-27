@@ -6,35 +6,41 @@
  * Выберите любой запрос из публичного API GitHub.
  */
 
-import { StatusHTTP } from "../../shared/store/ApiStore/types"
+import { ApiResponse } from "@ApiStore/types";
 
 export interface IGitHubStore {
-    getOrganizationReposList(params: GetOrganizationReposListParams): Promise<ApiResp<RepoItem[]>>;
+    getOrganizationReposList(
+        params: GetOrganizationReposListParams
+    ): Promise<ApiResponse<RepoItem[], any>>;
 }
 
 export type GetOrganizationReposListParams = {
     organizationName: string;
-}
+};
 
 export type PostOrganizationRepoParams = {
     organizationName: string;
     repoName: string;
     oauthToken: string;
     private: boolean;
-}
+};
+
+export type getOrganizationRepoBranchesListParams = {
+    organizationName: string;
+    repoName: string;
+};
 
 export type RepoItem = {
-    id: string,
-    repo_name: string;
-    org_name: string;
-    num_stars: number;
-    last_updated: Date;
-    url: string;
-}
+    id: string;
+    repoName: string;
+    orgName: string;
+    numStars: number;
+    lastUpdated: string;
+    repoUrl: string;
+    organizationUrl: string;
+    avatarUrl: string;
+};
 
-export type ApiResp<T> = 
-{
-    success: boolean,
-    data: T;
-    status: StatusHTTP
-}
+export type RepoBranches = {
+    name: string;
+};
