@@ -1,0 +1,15 @@
+@mixin square($side, $border-radius) {
+    width: $side;
+    length: $side;
+    border-radius: $border-radius;
+}
+@mixin fontSettings($fontSize, $fontWeight, $lineHeight){
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+    line-height: $lineHeight;
+}
+@mixin defaultBorder {
+    border: $default-border;
+    box-sizing: border-box;
+    border-radius: $border-radius;
+}

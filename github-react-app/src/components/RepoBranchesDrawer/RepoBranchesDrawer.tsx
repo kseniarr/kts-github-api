@@ -1,41 +1,47 @@
 import React, { useEffect, useState } from "react";
 
 import { gitStore } from "@root/root";
-import { RepoBranches, RepoItem } from "@store/GitHubStore/types";
+import { RepoBranches } from "@store/GitHubStore/types";
 import { Drawer } from "antd";
 import { List } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useReposContext } from "../../App";
 
 type RepoBranchesDrawerProps = {
-    selectedRepo: RepoItem | null;
     onClose: () => void;
 };
 
-const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({
-    selectedRepo,
-    onClose,
-}) => {
+const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({ onClose }) => {
     const [branches, setBranches] = useState<RepoBranches[] | null>(null);
+    const { repoName } = useParams();
+    const repoContext = useReposContext();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const func = async () => {
-            if (selectedRepo !== null) {
+        if (repoContext.list[0] === undefined) {
+            navigate("/repos");
+        } else {
+            setBranches([]);
+            const func = async () => {
                 const result = await gitStore.getOrganizationRepoBranchesList({
-                    organizationName: selectedRepo?.orgName,
-                    repoName: selectedRepo.repoName,
+                    organizationName: repoContext.list[0].orgName,
+                    repoName: repoName,
                 });
                 setBranches(result.success ? result.data : []);
-            }
-        };
+            };
 
-        func();
-    }, []);
+            if (repoName !== undefined) func();
+        }
+    }, [repoName]);
 
     return (
         <>
-            {
+            {repoName !== undefined && (
                 <Drawer
                     onClose={onClose}
-                    title={selectedRepo?.repoName}
+                    title={repoName}
                     size="large"
                     visible={true}
                 >
@@ -47,7 +53,7 @@ const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({
                         renderItem={(item) => <List.Item>{item}</List.Item>}
                     />
                 </Drawer>
-            }
+            )}
         </>
     );
 };
