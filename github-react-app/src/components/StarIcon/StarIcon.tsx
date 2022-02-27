@@ -1,17 +1,13 @@
 import React from "react";
 
-type StarIconProps = {
-    currentColor?: string;
-};
-
-const StarIcon: React.FC<StarIconProps> = ({ currentColor }) => {
+const StarIcon = () => {
     return (
         <span className="git-repo-tile__star-icon">
             <svg
                 width="14"
                 height="13"
                 viewBox="0 0 14 13"
-                fill={currentColor}
+                fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <path
@@ -25,4 +21,4 @@ const StarIcon: React.FC<StarIconProps> = ({ currentColor }) => {
     );
 };
 
-export default StarIcon;
+export default React.memo(StarIcon);

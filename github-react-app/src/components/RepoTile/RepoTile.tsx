@@ -5,13 +5,16 @@ import StarIcon from "@components/StarIcon";
 import { RepoItem } from "@store/GitHubStore/types";
 
 type RepoTileProps = {
-    onClick?: (e: React.MouseEvent) => void;
+    onClick: (id: string) => void;
     item: RepoItem;
 };
 
 const RepoTile: React.FC<RepoTileProps> = ({ onClick, item }) => {
+    const handleOnClick = () => {
+        onClick(item.id);
+    };
     return (
-        <div className="git-repo-tile" onClick={onClick}>
+        <div className="git-repo-tile" onClick={handleOnClick}>
             <Avatar
                 letter={item.repoName.charAt(0).toUpperCase()}
                 alt="avatar of ktsstudio's repository"
@@ -36,4 +39,4 @@ const RepoTile: React.FC<RepoTileProps> = ({ onClick, item }) => {
     );
 };
 
-export default RepoTile;
+export default React.memo(RepoTile);

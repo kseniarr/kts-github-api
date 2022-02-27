@@ -9,7 +9,8 @@
         "@store/*": ["src/store/*"],
         "@ApiStore/*": ["src/shared/store/ApiStore/*"],
         "@pages/*": ["src/pages/*"],
-        "@images/*": ["src/images/*"]
+        "@images/*": ["src/images/*"],
+        "@root/*": ["src/root/*"]
       }
     }
   }

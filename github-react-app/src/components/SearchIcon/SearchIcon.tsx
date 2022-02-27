@@ -1,15 +1,13 @@
-type SearchIconProps = {
-    currentColor?: string;
-};
+import React from "react";
 
-const SearchIcon: React.FC<SearchIconProps> = ({ currentColor }) => {
+const SearchIcon = () => {
     return (
         <>
             <svg
                 width="18"
                 height="18"
                 viewBox="0 0 18 18"
-                fill={currentColor}
+                fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <path
@@ -21,4 +19,4 @@ const SearchIcon: React.FC<SearchIconProps> = ({ currentColor }) => {
     );
 };
 
-export default SearchIcon;
+export default React.memo(SearchIcon);

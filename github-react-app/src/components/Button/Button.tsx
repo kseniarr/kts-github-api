@@ -1,9 +1,9 @@
 import React from "react";
 
 type ButtonProps = {
-    onClick?: (e: React.MouseEvent) => void;
+    onClick: (e: React.MouseEvent) => void;
     children: React.ReactNode;
-    disabled: boolean;
+    disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -22,4 +22,4 @@ const Button: React.FC<ButtonProps> = ({
     );
 };
 
-export default Button;
+export default React.memo(Button);
