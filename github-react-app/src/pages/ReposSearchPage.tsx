@@ -3,31 +3,17 @@ import React, { useState } from "react";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import RepoBranchesDrawer from "@components/RepoBranchesDrawer";
-import RepoTile from "@components/RepoTile";
+import RepoList from "@components/RepoList";
 import SearchIcon from "@components/SearchIcon";
 import "./ReposSearchPage.scss";
-import { RepoItem } from "@store/GitHubStore/types";
+import RepoListStore from "@store/RepoListStore";
+import { Meta } from "@utils/meta";
+import { useLocalStore } from "@utils/useLocalStore";
+import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
 
-import { useReposContext } from "../App";
-
 const ReposSearchPage = () => {
-    const monthNames: string[] = [
-        "Jan",
-        "Feb",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
-    const reposContext = useReposContext();
     const [inputValue, setInputValue] = useState("");
     const onChangeInput = (value: string) => {
         setInputValue(value);
@@ -35,64 +21,43 @@ const ReposSearchPage = () => {
         setHasMore(true);
     };
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(Meta.initial);
     const [page, setPage] = useState(1);
     const perPage = 30;
     const [hasMore, setHasMore] = useState(true);
 
     const nagivate = useNavigate();
+    const repoListStore = useLocalStore(() => new RepoListStore());
+    const [repos, setRepos] = useState(repoListStore);
 
-    const onSearchBtnClick = async () => {
-        setIsLoading(true);
-        reposContext.isLoading = true;
-
-        const response = await reposContext.load(inputValue, page, perPage);
-        const arr = response;
-        reposContext.list = arr?.map((x: any): RepoItem => {
-            return {
-                id: x.id,
-                repoName: x.name,
-                orgName: x.owner.login,
-                organizationUrl: x.owner.html_url,
-                numStars: x.stargazers_count,
-                lastUpdated: `Updated ${new Date(x.updated_at).getDate()} ${
-                    monthNames[new Date(x.updated_at).getMonth()]
-                }`,
-                repoUrl: x.url,
-                avatarUrl: x.owner.avatar_url,
-            };
+    const onSearchBtnClick = React.useCallback(async () => {
+        setIsLoading(Meta.loading);
+        await repoListStore.getRepoList({
+            organizationName: inputValue,
+            perPage: perPage,
+            page: page,
+            refresh: true,
         });
+        setRepos(repoListStore);
 
-        setIsLoading(false);
-        reposContext.isLoading = false;
-        if (
-            reposContext.list === undefined ||
-            reposContext.list.length === 0 ||
-            reposContext.list.length < 30
-        )
+        if (repoListStore.list.length === 0 || repoListStore.list.length < 30)
             setHasMore(false);
-    };
 
-    const fetchData = async () => {
+        setIsLoading(repoListStore.meta);
+    }, [inputValue, page, repoListStore]);
+
+    const fetchData = React.useCallback(async () => {
         setPage(page + 1);
-        const response = await reposContext.load(inputValue, page + 1, perPage);
-        const newArr = response.map((x: any): RepoItem => {
-            return {
-                id: x.id,
-                repoName: x.name,
-                orgName: x.owner.login,
-                organizationUrl: x.owner.html_url,
-                numStars: x.stargazers_count,
-                lastUpdated: `Updated ${new Date(x.updated_at).getDate()} ${
-                    monthNames[new Date(x.updated_at).getMonth()]
-                }`,
-                repoUrl: x.url,
-                avatarUrl: x.owner.avatar_url,
-            };
+        repoListStore.getRepoList({
+            organizationName: inputValue,
+            perPage: perPage,
+            page: page + 1,
         });
-        reposContext.list = [...reposContext.list, ...newArr];
-        if (response.length === 0 || response.length <= 30) setHasMore(false);
-    };
+        setRepos(repoListStore);
+        if (repoListStore.list.length === 0 || repoListStore.list.length <= 30)
+            setHasMore(false);
+    }, [inputValue, page, repoListStore]);
+
     return (
         <>
             <div className="repos-list">
@@ -101,7 +66,10 @@ const ReposSearchPage = () => {
                         value={inputValue}
                         onChange={(value: string) => onChangeInput(value)}
                     />
-                    <Button onClick={onSearchBtnClick} disabled={isLoading}>
+                    <Button
+                        onClick={onSearchBtnClick}
+                        disabled={isLoading === Meta.loading}
+                    >
                         <SearchIcon />
                     </Button>
                 </div>
@@ -112,28 +80,12 @@ const ReposSearchPage = () => {
                     loader={<></>}
                     endMessage={<></>}
                 >
-                    {reposContext.list !== undefined ? (
-                        reposContext.list?.map((repo) => {
-                            return (
-                                <React.Fragment key={repo.id}>
-                                    <RepoTile
-                                        item={repo}
-                                        onClick={() => {
-                                            nagivate(`/repos/${repo.repoName}`);
-                                        }}
-                                    />
-                                </React.Fragment>
-                            );
-                        })
-                    ) : (
-                        <div className="repos-list___error-msg">
-                            Репозиториев не найдено!
-                        </div>
-                    )}
+                    <RepoList list={repos.list} isLoading={isLoading} />
                 </InfiniteScroll>
             </div>
             {
                 <RepoBranchesDrawer
+                    orgName={inputValue}
                     onClose={() => {
                         nagivate("/repos");
                     }}
@@ -143,4 +95,4 @@ const ReposSearchPage = () => {
     );
 };
 
-export default ReposSearchPage;
+export default observer(ReposSearchPage);

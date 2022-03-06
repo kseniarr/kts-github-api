@@ -10,8 +10,6 @@ import {
 
 export default class ApiStore implements IApiStore {
     constructor(baseUrl: string) {
-        // TODO: Примите из параметров конструктора baseUrl
-        // и присвойте его в this.baseUrl
         this.baseUrl = baseUrl;
     }
     readonly baseUrl: string;
@@ -19,7 +17,6 @@ export default class ApiStore implements IApiStore {
     async request<SuccessT, ErrorT = any, ReqT = {}>(
         params: RequestParams<ReqT>
     ): Promise<ApiResponse<SuccessT, ErrorT>> {
-        // TODO: Напишите здесь код, который с помощью fetch будет делать запрос
         let data = qs.stringify(params.data);
         try {
             switch (params.method) {

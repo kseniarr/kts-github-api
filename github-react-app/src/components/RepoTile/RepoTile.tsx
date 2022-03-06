@@ -2,21 +2,21 @@ import React from "react";
 
 import Avatar from "@components/Avatar";
 import StarIcon from "@components/StarIcon";
-import { RepoItem } from "@store/GitHubStore/types";
+import { RepoItemModel } from "@store/models";
 
 type RepoTileProps = {
     onClick: (id: string) => void;
-    item: RepoItem;
+    item: RepoItemModel;
 };
 
 const RepoTile: React.FC<RepoTileProps> = ({ onClick, item }) => {
-    const handleOnClick = () => {
+    const handleOnClick = React.useCallback(() => {
         onClick(item.id);
-    };
+    }, []);
     return (
         <div className="git-repo-tile" onClick={handleOnClick}>
             <Avatar
-                letter={item.repoName.charAt(0).toUpperCase()}
+                letter={item.repoName?.charAt(0).toUpperCase()}
                 alt="avatar of ktsstudio's repository"
                 src={item.avatarUrl}
             />

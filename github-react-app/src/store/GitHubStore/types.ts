@@ -1,17 +1,11 @@
-/** Интерфейс класса для работы с GitHub API
- * названия getOrganizationReposList
- * (а также типов GetOrganizationReposListParams и RepoItem)
- * поменяйте в соответствии с выполняемым запросом.
- * Или не меняйте, если делаете запрос за списком репоизториев для организации)
- * Выберите любой запрос из публичного API GitHub.
- */
+import { ApiResponse } from "@rootStore/ApiStore/types";
+import { RepoItemApi } from "@store/models";
+import { ILocalStore } from "@utils/useLocalStore";
 
-import { ApiResponse } from "@ApiStore/types";
-
-export interface IGitHubStore {
+export interface IGitHubStore extends ILocalStore {
     getOrganizationReposList(
         params: GetOrganizationReposListParams
-    ): Promise<ApiResponse<RepoItem[], any>>;
+    ): Promise<ApiResponse<RepoItemApi[], any>>;
 }
 
 export type GetOrganizationReposListParams = {
@@ -27,22 +21,4 @@ export type PostOrganizationRepoParams = {
     private: boolean;
 };
 
-export type getOrganizationRepoBranchesListParams = {
-    organizationName: string;
-    repoName: string | undefined;
-};
-
-export type RepoItem = {
-    id: string;
-    repoName: string;
-    orgName: string;
-    numStars: number;
-    lastUpdated: string;
-    repoUrl: string;
-    organizationUrl: string;
-    avatarUrl: string;
-};
-
-export type RepoBranches = {
-    name: string;
-};
+export type PrivateFields = "_list" | "_meta";

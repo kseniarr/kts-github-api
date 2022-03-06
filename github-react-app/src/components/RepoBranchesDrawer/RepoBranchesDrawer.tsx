@@ -1,35 +1,42 @@
 import React, { useEffect, useState } from "react";
 
-import { gitStore } from "@root/root";
-import { RepoBranches } from "@store/GitHubStore/types";
+import { RepoBranchesModel } from "@store/models";
+import RepoBranchesStore from "@store/RepoBranchesStore";
+import { useLocalStore } from "@utils/useLocalStore";
 import { Drawer } from "antd";
 import { List } from "antd";
+import { observer } from "mobx-react-lite";
 import { useNavigate, useParams } from "react-router-dom";
-
-import { useReposContext } from "../../App";
 
 type RepoBranchesDrawerProps = {
     onClose: () => void;
+    orgName: string;
 };
 
-const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({ onClose }) => {
-    const [branches, setBranches] = useState<RepoBranches[] | null>(null);
+const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({
+    onClose,
+    orgName,
+}) => {
+    const [branches, setBranches] = useState<RepoBranchesModel[] | null>(null);
     const { repoName } = useParams();
-    const repoContext = useReposContext();
 
     const navigate = useNavigate();
 
+    const repoBranchesStore = useLocalStore(() => new RepoBranchesStore());
+
     useEffect(() => {
-        if (repoContext.list[0] === undefined) {
+        if (repoBranchesStore.branchesList === []) {
             navigate("/repos");
         } else {
             setBranches([]);
             const func = async () => {
-                const result = await gitStore.getOrganizationRepoBranchesList({
-                    organizationName: repoContext.list[0].orgName,
+                await repoBranchesStore.getOrganizationRepoBranchesList({
+                    organizationName: orgName,
                     repoName: repoName,
                 });
-                setBranches(result.success ? result.data : []);
+                setBranches(
+                    repoBranchesStore.meta ? repoBranchesStore.branchesList : []
+                );
             };
 
             if (repoName !== undefined) func();
@@ -48,7 +55,11 @@ const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({ onClose }) => {
                     <h3>Branches:</h3>
                     <List
                         dataSource={branches?.map((element) => {
-                            return <div key={element.name}>{element.name}</div>;
+                            return (
+                                <div key={element.branchName}>
+                                    {element.branchName}
+                                </div>
+                            );
                         })}
                         renderItem={(item) => <List.Item>{item}</List.Item>}
                     />
@@ -58,4 +69,4 @@ const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({ onClose }) => {
     );
 };
 
-export default RepoBranchesDrawer;
+export default observer(RepoBranchesDrawer);
