@@ -24,12 +24,24 @@ export default class RepoListStore implements ILocalStore {
         getInitialCollectionModel();
     private _meta: Meta = Meta.initial;
 
+    private _inputValue: string = "";
+    private _page: number = 1;
+    private _hasMore: boolean = true;
+    private _perPage: number = 30;
+
     constructor() {
         makeObservable<RepoListStore, PrivateFields>(this, {
             _list: observable.ref,
             _meta: observable,
+            _inputValue: observable,
+            _page: observable,
+            _hasMore: observable,
             list: computed,
             meta: computed,
+            inputValue: computed,
+            page: computed,
+            hasMore: computed,
+            perPage: computed,
             getRepoList: action,
         });
     }
@@ -40,10 +52,52 @@ export default class RepoListStore implements ILocalStore {
     get meta(): Meta {
         return this._meta;
     }
+    get inputValue(): string {
+        return this._inputValue;
+    }
+    get page(): number {
+        return this._page;
+    }
+    get hasMore(): boolean {
+        return this._hasMore;
+    }
+    get perPage(): number {
+        return this._perPage;
+    }
+
+    onChangeInput = (value: string) => {
+        this._inputValue = value;
+        this._page = 1;
+        this._hasMore = true;
+    };
+
+    onSearchBtnClick = async () => {
+        this._meta = Meta.loading;
+        await this.getRepoList({
+            organizationName: this._inputValue,
+            perPage: this._perPage,
+            page: this._page,
+            refresh: true,
+        });
+
+        if (this.list.length === 0 || this.list.length < 30) {
+            this._hasMore = false;
+        }
+    };
+
+    fetchData = async () => {
+        this._page += 1;
+        await this.getRepoList({
+            organizationName: this._inputValue,
+            perPage: this._perPage,
+            page: this._page,
+        });
+        if (this.list.length === 0 || this.list.length <= 30) {
+            this._hasMore = false;
+        }
+    };
 
     async getRepoList(params: GetOrganizationReposListParams): Promise<void> {
-        if (params.refresh === undefined) params.refresh = false;
-        if (params.refresh) this._list = getInitialCollectionModel();
         this._meta = Meta.loading;
 
         const response = await rootStore.apiStore.request<RepoItemApi[]>({
@@ -58,22 +112,24 @@ export default class RepoListStore implements ILocalStore {
         });
 
         runInAction(() => {
-            try {
-                if (response.success) {
-                    this._meta = Meta.success;
+            if (response.success) {
+                this._meta = Meta.success;
 
-                    let list: RepoItemModel[] = this.list;
-                    if (params.refresh) list = [];
+                let list: RepoItemModel[] = this.list;
 
-                    for (let i = 0; i < response.data.length; i++) {
-                        list.push(normalizeRepoItem(response.data[i]));
-                    }
-                    this._list = normalizeCollection(list, (item) => item.id);
+                const newList = response.data.map(normalizeRepoItem);
+                if (params.refresh) {
+                    this._list = normalizeCollection(
+                        newList,
+                        (item) => item.id
+                    );
                 } else {
-                    this._list = getInitialCollectionModel();
-                    this._meta = Meta.error;
+                    this._list = normalizeCollection(
+                        list.concat(newList),
+                        (item) => item.id
+                    );
                 }
-            } catch (e) {
+            } else {
                 this._list = getInitialCollectionModel();
                 this._meta = Meta.error;
             }

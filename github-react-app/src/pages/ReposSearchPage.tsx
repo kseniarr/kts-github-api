@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 
 import Button from "@components/Button";
 import Input from "@components/Input";
@@ -14,81 +14,47 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
 
 const ReposSearchPage = () => {
-    const [inputValue, setInputValue] = useState("");
-    const onChangeInput = (value: string) => {
-        setInputValue(value);
-        setPage(1);
-        setHasMore(true);
-    };
-
-    const [isLoading, setIsLoading] = useState(Meta.initial);
-    const [page, setPage] = useState(1);
-    const perPage = 30;
-    const [hasMore, setHasMore] = useState(true);
-
     const nagivate = useNavigate();
     const repoListStore = useLocalStore(() => new RepoListStore());
-    const [repos, setRepos] = useState(repoListStore);
-
-    const onSearchBtnClick = React.useCallback(async () => {
-        setIsLoading(Meta.loading);
-        await repoListStore.getRepoList({
-            organizationName: inputValue,
-            perPage: perPage,
-            page: page,
-            refresh: true,
-        });
-        setRepos(repoListStore);
-
-        if (repoListStore.list.length === 0 || repoListStore.list.length < 30)
-            setHasMore(false);
-
-        setIsLoading(repoListStore.meta);
-    }, [inputValue, page, repoListStore]);
-
-    const fetchData = React.useCallback(async () => {
-        setPage(page + 1);
-        repoListStore.getRepoList({
-            organizationName: inputValue,
-            perPage: perPage,
-            page: page + 1,
-        });
-        setRepos(repoListStore);
-        if (repoListStore.list.length === 0 || repoListStore.list.length <= 30)
-            setHasMore(false);
-    }, [inputValue, page, repoListStore]);
 
     return (
         <>
             <div className="repos-list">
                 <div className="search-bar">
                     <Input
-                        value={inputValue}
-                        onChange={(value: string) => onChangeInput(value)}
+                        value={repoListStore.inputValue}
+                        onChange={useCallback(
+                            (value: string) =>
+                                repoListStore.onChangeInput(value),
+                            [repoListStore]
+                        )}
                     />
                     <Button
-                        onClick={onSearchBtnClick}
-                        disabled={isLoading === Meta.loading}
+                        onClick={repoListStore.onSearchBtnClick}
+                        disabled={repoListStore.meta === Meta.loading}
                     >
                         <SearchIcon />
                     </Button>
                 </div>
                 <InfiniteScroll
-                    dataLength={perPage}
-                    next={fetchData}
-                    hasMore={hasMore}
+                    dataLength={repoListStore.perPage}
+                    next={repoListStore.fetchData}
+                    hasMore={repoListStore.hasMore}
                     loader={<></>}
                     endMessage={<></>}
                 >
-                    <RepoList list={repos.list} isLoading={isLoading} />
+                    <RepoList
+                        list={repoListStore.list}
+                        isLoading={repoListStore.meta}
+                    />
                 </InfiniteScroll>
             </div>
             {
                 <RepoBranchesDrawer
-                    orgName={inputValue}
-                    onClose={() => {
+                    orgName={repoListStore.inputValue}
+                    onClose={useCallback(() => {
                         nagivate("/repos");
-                    }}
+                    }, [])}
                 />
             }
         </>

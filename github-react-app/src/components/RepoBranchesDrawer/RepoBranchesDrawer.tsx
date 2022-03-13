@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { RepoBranchesModel } from "@store/models";
 import RepoBranchesStore from "@store/RepoBranchesStore";
 import { useLocalStore } from "@utils/useLocalStore";
 import { Drawer } from "antd";
@@ -17,28 +16,20 @@ const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({
     onClose,
     orgName,
 }) => {
-    const [branches, setBranches] = useState<RepoBranchesModel[] | null>(null);
     const { repoName } = useParams();
-
     const navigate = useNavigate();
-
     const repoBranchesStore = useLocalStore(() => new RepoBranchesStore());
 
     useEffect(() => {
         if (repoBranchesStore.branchesList === []) {
             navigate("/repos");
         } else {
-            setBranches([]);
             const func = async () => {
                 await repoBranchesStore.getOrganizationRepoBranchesList({
                     organizationName: orgName,
                     repoName: repoName,
                 });
-                setBranches(
-                    repoBranchesStore.meta ? repoBranchesStore.branchesList : []
-                );
             };
-
             if (repoName !== undefined) func();
         }
     }, [repoName]);
@@ -54,13 +45,15 @@ const RepoBranchesDrawer: React.FC<RepoBranchesDrawerProps> = ({
                 >
                     <h3>Branches:</h3>
                     <List
-                        dataSource={branches?.map((element) => {
-                            return (
-                                <div key={element.branchName}>
-                                    {element.branchName}
-                                </div>
-                            );
-                        })}
+                        dataSource={repoBranchesStore.branchesList?.map(
+                            (element) => {
+                                return (
+                                    <div key={element.branchName}>
+                                        {element.branchName}
+                                    </div>
+                                );
+                            }
+                        )}
                         renderItem={(item) => <List.Item>{item}</List.Item>}
                     />
                 </Drawer>

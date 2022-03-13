@@ -3,7 +3,6 @@ import React from "react";
 import RepoTile from "@components/RepoTile";
 import { RepoItemModel } from "@store/models";
 import { Meta } from "@utils/meta";
-import { useNavigate } from "react-router-dom";
 
 type RepoListProps = {
     list: RepoItemModel[];
@@ -11,16 +10,12 @@ type RepoListProps = {
 };
 
 const RepoList: React.FC<RepoListProps> = ({ list, isLoading }) => {
-    const nagivate = useNavigate();
     return (
         <>
             {list?.map((repo) => {
                 return (
                     <React.Fragment key={repo.id}>
-                        <RepoTile
-                            item={repo}
-                            onClick={() => nagivate(`/repos/${repo.repoName}`)}
-                        />
+                        <RepoTile item={repo} />
                     </React.Fragment>
                 );
             })}

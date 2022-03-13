@@ -78,19 +78,14 @@ export default class RepoBranchesStore implements IRepoBranchesStore {
 
         runInAction(() => {
             if (response.success) {
-                try {
-                    this._meta = Meta.success;
-                    const list: RepoBranchesModel[] = [];
-                    for (const item of response.data) {
-                        list.push(normalizeRepoBranches(item));
-                    }
-                    this._branchesList = normalizeCollection(
-                        list,
-                        (item) => item.branchName
-                    );
-                } catch {
-                    this._meta = Meta.error;
-                }
+                this._meta = Meta.success;
+                const list = response.data.map(normalizeRepoBranches);
+                this._branchesList = normalizeCollection(
+                    list,
+                    (item) => item.branchName
+                );
+            } else {
+                this._meta = Meta.error;
             }
         });
     }

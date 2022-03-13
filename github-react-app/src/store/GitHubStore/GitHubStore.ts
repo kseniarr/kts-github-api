@@ -1,7 +1,6 @@
 import { ApiResponse, HTTPMethod } from "@rootStore/ApiStore/types";
 import rootStore from "@rootStore/instance";
 import { RepoItemApi } from "@store/models";
-import { action, makeObservable } from "mobx";
 
 import {
     GetOrganizationReposListParams,
@@ -10,13 +9,6 @@ import {
 } from "./types";
 
 export default class GitHubStore implements IGitHubStore {
-    constructor() {
-        makeObservable<GitHubStore>(this, {
-            getOrganizationReposList: action,
-            postOrganizationRepo: action,
-        });
-    }
-
     destroy(): void {
         // pass
     }
