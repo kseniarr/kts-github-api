@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
 
-import { RepoItem } from "@store/GitHubStore/types";
+import { RepoItemModel } from "@store/models";
 
 export type ReposContextType = {
-    list: RepoItem[];
+    list: RepoItemModel[];
     isLoading: boolean;
     load: (inputValue: string, page: number, perPage: number) => Promise<any>;
 };

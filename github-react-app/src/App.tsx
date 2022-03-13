@@ -2,7 +2,6 @@ import ReposSearchPage from "@pages/ReposSearchPage";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 function App() {
-
     return (
         <div className="App">
             <BrowserRouter basename="/">
