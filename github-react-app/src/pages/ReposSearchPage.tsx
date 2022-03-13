@@ -10,7 +10,7 @@ import { RepoItem } from "@store/GitHubStore/types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
 
-import { useReposContext } from "../App";
+import { useReposContext } from "../ReposContext";
 
 const ReposSearchPage = () => {
     const monthNames: string[] = [
@@ -29,6 +29,7 @@ const ReposSearchPage = () => {
     ];
     const reposContext = useReposContext();
     const [inputValue, setInputValue] = useState("");
+    const [hasMore, setHasMore] = useState(true);
     const onChangeInput = (value: string) => {
         setInputValue(value);
         setPage(1);
@@ -36,9 +37,8 @@ const ReposSearchPage = () => {
     };
 
     const [isLoading, setIsLoading] = useState(false);
-    const [page, setPage] = useState(1);
     const perPage = 30;
-    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
 
     const nagivate = useNavigate();
 
@@ -126,7 +126,7 @@ const ReposSearchPage = () => {
                             );
                         })
                     ) : (
-                        <div className="repos-list___error-msg">
+                        <div className="repos-list__error-msg">
                             Репозиториев не найдено!
                         </div>
                     )}

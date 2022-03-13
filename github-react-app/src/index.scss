@@ -15,12 +15,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-h5{
-    @include fontSettings(16px, bold, 18.75px);
-    margin: 0;
-}
-p, span{
-    margin: 0;
-    color: $grey-color;
-    @include fontSettings(14px, normal, 16.41px);
-}

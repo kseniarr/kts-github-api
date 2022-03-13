@@ -6,7 +6,7 @@ import { Drawer } from "antd";
 import { List } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useReposContext } from "../../App";
+import { useReposContext } from "../../ReposContext";
 
 type RepoBranchesDrawerProps = {
     onClose: () => void;

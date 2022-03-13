@@ -8,7 +8,7 @@
     box-sizing: border-box;
     padding: 20px;
 
-    .repos-list___error-msg {
+    &__error-msg {
         margin-top: 2rem;
     }
 }
@@ -24,7 +24,12 @@
         box-shadow: 0px 2px 6px rgba(182, 182, 182, 0.25);
     }
 
-    .git-repo-tile__repo-name, .git-repo-tile__org-link, .git-repo-tile__repo-name {
+    &__star-icon, &__date-updated, &__num-stars, &__org-link {
+        margin: 0;
+        color: $grey-color;
+        @include fontSettings(14px, normal, 16.41px);
+    }
+    &__repo-name, &__org-link, &__repo-name {
         margin: 4px 0;
         text-overflow: ellipsis;
         overflow: hidden; 
@@ -32,36 +37,40 @@
         height: 1.2em; 
         white-space: nowrap;
     }
-    .git-repo-tile__org-link {
+    &__repo-name {
+        @include fontSettings(16px, bold, 18.75px);
+        margin: 0;
+    }
+    &__org-link {
         margin-bottom: 4px;
         &:hover {
             color: $link-hover-color;
         }
     }
-    .git-repo-tile__context{
+    &__context{
         display: flex;
         flex-direction: column;
     }
-    .git-repo-tile__content{
+    &__content{
         text-align: start;
         margin-left: 12px;
     }
-    .git-repo-tile__avatar{
+    &__avatar{
         @include square(80px, 50%);
         background-color: $btn-color;
         @include fontSettings(40px, 700, 80px);
         color: $bg-color;
     }
-    .git-repo-tile__stars {
+    &__stars {
         display: inline-block;
     }
-    .git-repo-tile__num-stars{
+    &__num-stars{
         margin-left: 4px;
     }
-    .git-repo-tile__star-icon {
+    &__star-icon {
         vertical-align: middle;
     }
-    .git-repo-tile__date-updated {
+    &__date-updated {
         display: inline-block;
         margin-left: 20px;
     }
@@ -71,7 +80,7 @@
     display: flex;
     justify-content: space-between;
     
-    .search-bar__search-button{
+    &__search-button{
         background-color: $btn-color;
         border: none;
         @include square(50px, $border-radius);
@@ -83,10 +92,10 @@
             background-color: $grey-color;
         }
     }
-    .search-bar__search-icon{
+    &__search-icon{
         margin: 0 auto;
     }
-    .search-bar__input {
+    &__input {
         width: 295px;
         height: 50px;
         padding: 17px 0 17px 12px;
