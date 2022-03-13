@@ -25,8 +25,8 @@ export default class ApiStore implements IApiStore {
             switch (params.method) {
                 case HTTPMethod.GET: {
                     let keys = qs.parse(data);
-                    let url = `${this.baseUrl}/orgs/${keys["org"]}/repos`;
-                    if (Object.keys(keys).length > 1) {
+                    let url = `${this.baseUrl}/orgs/${keys["org"]}/repos?per_page=${keys["per_page"]}&page=${keys["page"]}`;
+                    if (Object.keys(keys).length === 2) {
                         url = `${this.baseUrl}/repos/${keys["orgName"]}/${keys["repoName"]}/branches`;
                     }
                     const response = await fetch(url, params);

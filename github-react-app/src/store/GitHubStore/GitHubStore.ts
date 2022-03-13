@@ -23,9 +23,11 @@ export default class GitHubStore implements IGitHubStore {
         const response = await this.apiStore.request<RepoItem[]>({
             method: HTTPMethod.GET,
             headers: { Accept: "application/vnd.github.v3+json" },
-            endpoint: `/orgs/${params.organizationName}/repos`,
+            endpoint: `/orgs/${params.organizationName}/repos?per_page=${params.perPage}&page=${params.page}`,
             data: {
                 org: params.organizationName,
+                per_page: params.perPage,
+                page: params.page,
             },
         });
         return {

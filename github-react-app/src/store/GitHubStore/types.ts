@@ -16,6 +16,8 @@ export interface IGitHubStore {
 
 export type GetOrganizationReposListParams = {
     organizationName: string;
+    page: number;
+    perPage: number;
 };
 
 export type PostOrganizationRepoParams = {
@@ -27,7 +29,7 @@ export type PostOrganizationRepoParams = {
 
 export type getOrganizationRepoBranchesListParams = {
     organizationName: string;
-    repoName: string;
+    repoName: string | undefined;
 };
 
 export type RepoItem = {
