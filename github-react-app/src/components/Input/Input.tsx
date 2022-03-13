@@ -11,9 +11,12 @@ const Input: React.FC<InputProps> = ({
     placeholder = "Введите название организации!",
     onChange,
 }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(e.target.value);
-    };
+    const handleChange = React.useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(e.target.value);
+        },
+        []
+    );
     return (
         <input
             className="search-bar__input"
