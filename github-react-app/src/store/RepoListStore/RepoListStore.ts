@@ -73,6 +73,8 @@ export default class RepoListStore implements ILocalStore {
 
     onSearchBtnClick = async () => {
         this._meta = Meta.loading;
+        this._list = getInitialCollectionModel();
+
         await this.getRepoList({
             organizationName: this._inputValue,
             perPage: this._perPage,

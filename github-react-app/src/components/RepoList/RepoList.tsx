@@ -20,7 +20,7 @@ const RepoList: React.FC<RepoListProps> = ({ list, isLoading }) => {
                 );
             })}
             {isLoading === Meta.error && (
-                <div className="repos-list___error-msg">
+                <div className="repos-list__error-msg">
                     Репозиториев не найдено!
                 </div>
             )}

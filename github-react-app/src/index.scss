@@ -2,7 +2,7 @@
 @import "mixins";
 
 html{
-    color: var(--default-text-color);
+    color: $default-text-color;
     background-color: $bg-color;
     font-family: "Roboto";
 }

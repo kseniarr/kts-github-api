@@ -19,6 +19,7 @@ const ReposSearchPage = () => {
 
     return (
         <>
+            <h2 className="page-title">Список репозиториев организации</h2>
             <div className="repos-list">
                 <div className="search-bar">
                     <Input
@@ -36,18 +37,20 @@ const ReposSearchPage = () => {
                         <SearchIcon />
                     </Button>
                 </div>
-                <InfiniteScroll
-                    dataLength={repoListStore.perPage}
-                    next={repoListStore.fetchData}
-                    hasMore={repoListStore.hasMore}
-                    loader={<></>}
-                    endMessage={<></>}
-                >
-                    <RepoList
-                        list={repoListStore.list}
-                        isLoading={repoListStore.meta}
-                    />
-                </InfiniteScroll>
+                {repoListStore.meta !== Meta.initial && (
+                    <InfiniteScroll
+                        dataLength={repoListStore.list.length}
+                        next={repoListStore.fetchData}
+                        hasMore={repoListStore.hasMore}
+                        loader={<></>}
+                        endMessage={<></>}
+                    >
+                        <RepoList
+                            list={repoListStore.list}
+                            isLoading={repoListStore.meta}
+                        />
+                    </InfiniteScroll>
+                )}
             </div>
             {
                 <RepoBranchesDrawer

@@ -12,18 +12,29 @@ type RepoTileProps = {
 
 const RepoTile: React.FC<RepoTileProps> = ({ item }) => {
     return (
-        <Link to={`/repos/${item.repoName}`}>
-            <div className="git-repo-tile">
+        <div className="git-repo-tile">
+            <Link to={`/repos/${item.repoName}`}>
                 <Avatar
                     letter={item.repoName?.charAt(0).toUpperCase()}
                     alt="avatar of ktsstudio's repository"
                     src={item.avatarUrl}
                 />
-                <div className="git-repo-tile__content">
+            </Link>
+            <div className="git-repo-tile__content">
+                <Link to={`/repos/${item.repoName}`}>
                     <h5 className="git-repo-tile__repo-name">
                         {item.repoName}
                     </h5>
-                    <p className="git-repo-tile__org-link">{item.orgName}</p>
+                </Link>
+                <a
+                    className="git-repo-tile__org-link"
+                    href={item.organizationUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {item.orgName}
+                </a>
+                <Link to={`/repos/${item.repoName}`}>
                     <div className="git-repo-tile__info">
                         <div className="git-repo-tile__stars">
                             <StarIcon />
@@ -35,9 +46,9 @@ const RepoTile: React.FC<RepoTileProps> = ({ item }) => {
                             {item.lastUpdated}
                         </span>
                     </div>
-                </div>
+                </Link>
             </div>
-        </Link>
+        </div>
     );
 };
 
